@@ -125,52 +125,63 @@ class CameraGroup(pygame.sprite.Group):
         self.display_surface = pygame.display.get_surface()
 
         # camera offset
-        self.offset = pygame.math.Vector2(0,20)
-        self.half_w = self.display_surface.get_size()[0] / 2
+        self.offset = pygame.math.Vector2(0,0)
+        self.half_w = self.display_surface.get_size()[0] / 1000
         self.half_h = self.display_surface.get_size()[1]
 
-    
+
     def center_target_camera(self, target):
+        
         self.offset.x = target.rect.centerx - self.half_w
         self.offset.y = target.rect.centery - self.half_h
 
-    def sprites_draw(self,player, background):
+    def sprites_draw(self, player, road, mountains):
         
         self.center_target_camera(player)
-        ground_offset = (background.get_rect().centerx , background.get_rect().centery)- self.offset
-        self.display_surface.blit(background, ground_offset)
-        background.get_rect().centerx
+        ground_offset = (0,0) - self.offset
+        self.display_surface.blit(road, (0,400) + ground_offset),
+        self.display_surface.blit(mountains, ground_offset)
         for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
             offset_pos = sprite.rect.topleft - self.offset
-            self.display_surface.blit(background, offset_pos)
+            # self.display_surface.blit(road, offset_pos)
 
 
-class Background(pygame.sprite.Sprite):
+class Display(pygame.sprite.Sprite):
     
     def __init__(self) -> None:
         super().__init__()
         self.display_surf = pygame.Surface((1200, 900))
         self.display_surf.fill((137, 207, 240))
 
-        self.mountains_surf = pygame.image.load('assets/mountains.png').convert_alpha()
-        self.mountains_surf = pygame.transform.scale(self.mountains_surf, (1100, 400))
-
-        self.road_surf = pygame.image.load('assets/road.png').convert_alpha()
-        self.road_surf = pygame.transform.scale(self.road_surf, (1100, 200))
-
-    def return_surface(self, screen: pygame.Surface):
-
-        background = self.display_surf
-        mountains = self.mountains_surf
-        road = self.road_surf
         
-        screen.blit(background, [0,0])
-        screen.blit(mountains, [0,400])
-        screen.blit(road, [0,700])
+    def run_display(self, screen : pygame.Surface ):
 
-        return mountains
+        screen.blit(self.display_surf, [0,0])
 
 
+class Background(pygame.sprite.Sprite):
 
+        def __init__(self) -> None:
+            
+            super().__init__()
 
-    
+            self.mountains_surf = pygame.image.load('assets/mountains.png').convert_alpha()
+            self.mountains_surf = pygame.transform.scale(self.mountains_surf, (1100, 400))
+
+            self.road_surf = pygame.image.load('assets/road.png').convert_alpha()
+            self.road_surf = pygame.transform.scale(self.road_surf, (1100, 200))
+
+            self.road_surf_rect = self.road_surf.get_rect()
+            self.road_surf_rect.y = 200
+            self.road_surf_rect.x = 100
+
+            print(self.road_surf_rect.x)
+        def return_background(self):
+
+            return self.mountains_surf, self.road_surf
+
+        # def create_group(self):
+            
+        #     group = pygame.sprite.Group(self.mountains, self.road)
+
+        #     return group

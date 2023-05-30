@@ -1,5 +1,5 @@
 import pygame
-from models import Player, CameraGroup, Background
+from models import Player, CameraGroup, Background, Display
 import time
 from sys import exit
 
@@ -11,14 +11,11 @@ def main():
     screen = pygame.display.set_mode((1200, 900))
     pygame.display.set_caption("Riders On The Storm")
     clock = pygame.time.Clock()
-    green = (0,255,0)
-    red = (255, 0, 0)
+    display = Display()
 
-    background = Background()
-
-    
+    mountains, road = Background().return_background()
     camera_group = CameraGroup()
-
+    
     # icon = pygame.image.load('assets/cycling.png')
     # pygame.display.set_icon(icon)
     
@@ -48,13 +45,15 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-
         
-        backgorund = background.return_surface(screen=screen)
+        display.run_display(screen=screen)
+            # screen.blit(blue_back, [0,0])
+            # print(back)
+            # backgorund = background.return_surface(screen=screen)
         player.control()
-    
+        camera_group.sprites_draw(player, road=road, mountains=mountains)
         player.movement(screen=screen)
-        camera_group.sprites_draw(player, backgorund)
+        
         # if player.rect.centery < 840:
         #     player.control(2.0,0.0,2.0)
         # elif player.rect.centery > 1020:
