@@ -1,5 +1,5 @@
 import pygame
-from models import Player, CameraGroup, Background, Display
+from models import Player, CameraGroup, Background, Display, Enemy
 import time
 from sys import exit
 
@@ -13,16 +13,15 @@ def main():
     clock = pygame.time.Clock()
     display = Display()
 
-    mountains, road = Background().return_background()
+    mountains, roads = Background().return_background()
     camera_group = CameraGroup()
     
-    # icon = pygame.image.load('assets/cycling.png')
-    # pygame.display.set_icon(icon)
+    icon = pygame.image.load('assets/cycling.png')
+    pygame.display.set_icon(icon)
     
-    player = Player('assets/racing.png',x_pos=100, y_pos=600)
-    # player = Player('assets/racing.png', x_loc=0, y_loc=0, group=camera_group)
-    # player.show_player(resize=True, factor=5)
-
+    player = Player('assets/racing.png',x_pos=100, y_pos=600, group=camera_group)
+    enemy = Enemy('assets/enemy.png', x_pos=100, y_pos=500, group=camera_group)
+    
     # enemy = Enemy('assets/enemy.png', x_loc=100, y_loc=980, group=camera_group)
     # enemy.show_player(resize=True, factor=5)
 
@@ -47,13 +46,10 @@ def main():
                 exit()
         
         display.run_display(screen=screen)
-            # screen.blit(blue_back, [0,0])
-            # print(back)
-            # backgorund = background.return_surface(screen=screen)
         player.control()
-        camera_group.sprites_draw(player, road=road, mountains=mountains)
-        player.movement(screen=screen)
-        
+        camera_group.sprites_draw(player, road=roads, mountains=mountains)
+        # player.movement(screen=screen)
+        enemy.movement()
         # if player.rect.centery < 840:
         #     player.control(2.0,0.0,2.0)
         # elif player.rect.centery > 1020:
@@ -90,7 +86,7 @@ def main():
         # pygame.draw.rect(screen, (255, 0, 0), player.rect)
         # screen.blit(background, [0,0])
         # camera_group.sprites_draw(player)
-
+        print(player.rect.colliderect(enemy.rect))
         pygame.display.update()
         clock.tick(60)
 

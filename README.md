@@ -9,3 +9,7 @@ First pygame project
 ## Install packages
 
 `pip install -r requirements.txt`
+
+## Start the game
+
+`python -m main`
